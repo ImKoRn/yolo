@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">YOLO</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="photographPhoto">Photograph photo</string>
+    <string name="nameHint">Your name</string>
+    <string name="emailHint">Your email</string>
+    <string name="messageHint">Type your message hire</string>
+    <string name="phoneNumberHint">Your phone number</string>
+    <string name="sendButtonText">Send</string>
+    <string name="emailErrorMsg">Write your email place</string>
+    <string name="promptSendDialogTitle">Do you want to send?</string>
+    <string name="promptSendDialogMsg">Email or phone number writen wrong or don\'t writen in general</string>
+    <string name="promptPossitiveBtnText">Anyway send</string>
+    <string name="promptNegativeBtnText">Change input</string>
+</resources>
