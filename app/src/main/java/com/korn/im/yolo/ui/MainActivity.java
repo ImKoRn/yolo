@@ -20,26 +20,32 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String LAST_MENU_CATEGORY = "lastMenuCategory";
-    private int lastMenuCategory;
+    private int lastMenuCategory = R.id.navBlog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initUi();
+
+
+        if(savedInstanceState == null)
+            setFragment(lastMenuCategory);
+    }
+
+    private void initUi() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigationDrawerOpen, R.string.navigationDrawerClose);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.mainNavView);
         navigationView.setNavigationItemSelectedListener(this);
-
-        setFragment(lastMenuCategory);
     }
 
     @Override
@@ -96,24 +102,16 @@ public class MainActivity extends AppCompatActivity
     public void setFragment(int itemId) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (lastMenuCategory = itemId) {
-            case R.id.nav_blog : {
+            case R.id.navBlog: {
                 fragmentTransaction.replace(R.id.holder, new EmailFragment());
                 break;
             }
-            case R.id.nav_portfolio : {
+            case R.id.navPortfolio: {
                 fragmentTransaction.replace(R.id.holder, new PhotographersListFragment());
                 break;
             }
         }
         fragmentTransaction.commit();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState != null) {
-            lastMenuCategory = savedInstanceState.getInt(LAST_MENU_CATEGORY, R.id.nav_blog);
-        }
     }
 
     @Override

@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/mainItems" android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_blog"
-            android:title="Blog"
+            android:id="@+id/navBlog"
+            android:title="@string/blogMenuTitle"
+            android:icon="@drawable/newspaper"
             android:checked="true"/>
         <item
-            android:id="@+id/nav_portfolio"
-            android:title="Portfolio" />
-        <item
-            android:id="@+id/about"
-            android:title="About" />
+            android:id="@+id/navPortfolio"
+            android:title="@string/portfolioMenuTitle"
+            android:icon="@drawable/portfolio"/>
     </group>
 
-    <item android:title="Preferences">
+    <item android:title="@string/aboutMenuGroupTitle"
+        app:showAsAction="ifRoom|withText">
         <menu>
-            <item
-                android:id="@+id/nav_preferences"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Preferences" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/navAboutCompany"
+                    android:icon="@drawable/domain"
+                    android:title="@string/aboutCompanyMenuTitle" />
+                <item
+                    android:id="@+id/navAboutDeveloper"
+                    android:icon="@drawable/developer"
+                    android:title="@string/aboutDeveloperMenuTitle" />
+            </group>
         </menu>
     </item>
 
+    <item
+        android:id="@+id/navPreferences"
+        android:icon="@drawable/settings"
+        android:title="@string/preferencesMenuTitle" />
 </menu>

@@ -1,5 +1,6 @@
 package com.korn.im.yolo.objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,11 +8,10 @@ import java.util.List;
 /**
  * Photograph representation. Has name, price, description and list genres this photographer.
  */
-public class Photograph {
+public class Photograph implements Serializable{
     private String name;
     private int price;
     private String description;
-
 
     private List<String> listOfPhotoGenre = new ArrayList<>();
 
