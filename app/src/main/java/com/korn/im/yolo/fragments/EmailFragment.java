@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.korn.im.yolo.R;
+import com.korn.im.yolo.loaders.DataLoader;
 
 /**
  * Fragment for communication with agency

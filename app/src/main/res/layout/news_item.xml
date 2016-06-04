@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/imageView"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/scrim"
+                android:padding="10dp"
+
+                android:layout_gravity="center_horizontal|bottom">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:id="@+id/titleView"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/moreBtn"
+                    android:layout_toStartOf="@+id/moreBtn" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/learnMoreText"
+                    android:id="@+id/moreBtn"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+        </FrameLayout>
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/contentView"
+            android:padding="10dp"
+            android:maxLines="4"
+            android:ellipsize="end"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

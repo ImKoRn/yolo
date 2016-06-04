@@ -3,15 +3,28 @@
     package="com.korn.im.yolo">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <application
+    //For GCM
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    //Own permission for protecting our messages
+    <permission android:name="com.korn.im.yolo.permission.MESSAGES"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.korn.im.yolo.permission.MESSAGES"/>
+
+    <application android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/appName"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,13 +33,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".ui.PhotographerActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".activity.PhotographerActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".activity.NewsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--Service for loading data from site-->
+
+        <!--Service for message executing-->
+        <service android:name=".services.GcmMessagesListenerService" android:exported="false">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
-        </activity>
+        </service>
+
+        <!--Service for getting token-->
+        <service android:name=".services.GcmRegistrationIntentService" android:exported="false"/>
+
+        <!--Service for updating token-->
+        <service android:name=".services.GcmIdChangingListenerService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <!--Google cloud message receiver-->
+        <receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

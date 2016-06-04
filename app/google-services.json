@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "256140433852",
+    "project_id": "you-only-live-once"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256140433852:android:3b09655455124163",
+        "android_client_info": {
+          "package_name": "com.korn.im.yolo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-d9_TT_Zgu3gGqvjI_503PrnpSQ2GCxs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
