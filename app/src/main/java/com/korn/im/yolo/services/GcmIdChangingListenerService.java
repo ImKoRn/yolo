@@ -5,7 +5,7 @@ import android.content.Intent;
 import com.google.android.gms.iid.InstanceIDListenerService;
 
 /**
- * Created by korn on 26.05.16.
+ * Don`n now how it works
  */
 public class GcmIdChangingListenerService extends InstanceIDListenerService {
     @Override

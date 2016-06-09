@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimaryDark">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,40 +19,33 @@
             app:expandedTitleTextAppearance="@style/AppTheme.ExpandedAppTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
+            <include layout="@layout/portfolio_photos"/>
             <include layout="@layout/toolbar"/>
-
-            <include layout="@layout/photographer_photos"/>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:fitsSystemWindows="true">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/descriptionView"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in fermentum arcu. Nullam porta fringilla lacus vitae sollicitudin. Donec varius vitae nisl a lacinia."/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/colorPrimaryDark"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/genreList"
-                tools:listitem="@layout/genre_item"/>
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:id="@+id/descriptionView"/>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        app:layout_behavior="com.korn.im.yolo.common.FabBehavior"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendBtn"
+        android:src="@drawable/email"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/scrollView"
+        app:layout_anchorGravity="bottom|right|end"/>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -2,22 +2,18 @@ package com.korn.im.yolo.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
 public class Post implements Parcelable {
 
-    public static final String ID_FIELD = "id";
-    public static final String DATE_FIELD = "date";
-    public static final String TITLE_FIELD = "title";
-    public static final String CONTENT_FIELD = "content";
+    private static final String ID_FIELD = "id";
+    private static final String TITLE_FIELD = "title";
+    private static final String CONTENT_FIELD = "content";
     private static final String RENDERED_FIELD = "rendered";
 
     private int id;
@@ -25,10 +21,10 @@ public class Post implements Parcelable {
     private String title = "";
     private String content = "";
 
-    protected Post() {
+    Post() {
     }
 
-    protected Post(Parcel parcel) {
+    Post(Parcel parcel) {
         id = parcel.readInt();
         title = parcel.readString();
         content = parcel.readString();
@@ -38,40 +34,20 @@ public class Post implements Parcelable {
         return content;
     }
 
-    public void setContent(String content) {
+    void setContent(String content) {
         this.content = content;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void parseFromJsonObject(JSONObject jsonObject) throws JSONException, ParseException {
+    void parseFromJsonObject(JSONObject jsonObject) throws JSONException, ParseException {
         // TODO Add more protection
         this.id = jsonObject.getInt(ID_FIELD);
         //this.date = DateFormat.getInstance().parse(jsonObject.getString(DATE_FIELD));
-        this.title = Html.fromHtml(jsonObject.optJSONObject(TITLE_FIELD).getString(RENDERED_FIELD)).toString();
-        this.content = Html.fromHtml(jsonObject.optJSONObject(CONTENT_FIELD).getString(RENDERED_FIELD)).toString();
+        this.title = jsonObject.optJSONObject(TITLE_FIELD).getString(RENDERED_FIELD);
+        this.content = jsonObject.optJSONObject(CONTENT_FIELD).getString(RENDERED_FIELD);
     }
 
     public JSONObject parseToJsonObject() throws JSONException {

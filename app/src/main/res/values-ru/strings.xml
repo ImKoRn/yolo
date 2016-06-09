@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memorySizeSummary">How many memory will be available for storing images on phone. For now app use %s MB of memory.</string>
+    <string name="contactsMenuTitle">Контакты</string>
+    <string name="cooperationMenuTitle">Сотрудничество</string>
+    <string name="navigationDrawerClose">Закрыть меню</string>
+    <string name="navigationDrawerOpen">Открыть меню</string>
+    <string name="noPhotographerSelectedText">Выберите фотографа</string>
+    <string name="offlineText">Вне сети</string>
+    <string name="portfolioMenuTitle">Портфолио</string>
+    <string name="preferencesMenuTitle">Настройки</string>
+    <string name="pullText">Потяните для обновления</string>
+    <string name="savePreferencesTitle">Сохранить</string>
+    <string name="useEmailAndPhoneText">Использовать почту и телефон (Желательно))</string>
+    <string name="useOnlyEmailText">Использовать почту</string>
+    <string name="blogMenuTitle">Новости</string>
+    <string name="learnMoreText">Больше</string>
+    <string name="companyInfo">+380986782625 (Дмитрий – директор)\n+380638105425 (Анастасия - менеджер)\n\nС нами можно связаться всеми удобными способами связи, используя мобильные приложения: WhatsApp, Viber, iMessage.\n\ninfo@yolo.kiev.ua\npromotion@yolo.kiev.ua – сотрудничество</string>
+    <string name="cooperationText" translatable="false">Компания YOLO предоставляет услуги менеджмента и рекламы для фотографов. Мы знаем как и хотим провести для Вас лучшую рекламную кампанию, позаботимся о клиентах, совместно принесем новое в искусство фотографии. В наши обязанности входит:\n — работа с клиентом;\n — проведение рекламной кампании;\n — организация фотопроектов;\n — поиск всевозможного пути продвижения Ваших услуг;\n — индивидуальный подход к развитию фотографа.\n Подходим к работе серьезно, ответственно и оптимистично. Для уточнений деталей сотрудничества пишите promotion@yolo.kiev.ua или звоните по номеру +380986782625. С уважением, Компания YOLO.</string>
+    <string name="notificationSummary">Может ли приложение сообщать о новостях</string>
+    <string name="notificationTitle">Показывать сообщения</string>
+    <string name="memoryTitle">Размер кеша для фотографий</string>
+    <string name="categoryNotifications">Сообщения</string>
+    <string name="categoryPictures">Фотографии</string>
+</resources>

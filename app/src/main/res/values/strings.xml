@@ -1,31 +1,42 @@
 <resources>
-    <string name="appName">YOLO</string>
+    <string name="appName" translatable="false">YOLO</string>
 
     <string name="navigationDrawerOpen">Open navigation drawer</string>
     <string name="navigationDrawerClose">Close navigation drawer</string>
 
-    <string name="actionSettings">Settings</string>
-    <string name="photographPhoto">Photograph photo</string>
-    <string name="nameHint">Your name</string>
-    <string name="emailHint">Your email</string>
-    <string name="messageHint">Type your message hire</string>
-    <string name="phoneNumberHint">Your phone number</string>
-    <string name="sendButtonText">Send</string>
-    <string name="emailErrorMsg">Write your email place</string>
-    <string name="promptSendDialogTitle">Do you want to send?</string>
-    <string name="promptSendDialogMsg">Email or phone number write wrong or don\'t write in general</string>
-    <string name="promptPositiveBtnText">Anyway send</string>
-    <string name="promptNegativeBtnText">Change input</string>
-    <string name="noPhotographersYetText">No photographers yet</string>
     <string name="noPhotographerSelectedText">Place select photographer</string>
-    <string name="aboutCompanyMenuTitle">About agency</string>
     <string name="preferencesMenuTitle">Preferences</string>
     <string name="portfolioMenuTitle">Portfolio</string>
-    <string name="blogMenuTitle">Blog</string>
-    <string name="aboutDeveloperMenuTitle">About developer</string>
-    <string name="aboutMenuGroupTitle">About</string>
-    <string name="senderId">256140433852</string>
+    <string name="blogMenuTitle">News</string>
+    <string name="senderId" translatable="false">256140433852</string>
     <string name="offlineText">Offline</string>
-    <string name="noInternetConnectionMsg">Offline</string>
     <string name="learnMoreText">Learn more</string>
+    <string name="useEmailAndPhoneText">Use email and phone (preferable)</string>
+    <string name="useOnlyEmailText">Use only email</string>
+    <string name="cooperationMenuTitle">Cooperation</string>
+    <string name="contactsMenuTitle">Contacts</string>
+    <string name="memorySizeSummary">How many memory will be available for storing images on phone. For now app use %s MB of memory.</string>
+    <string name="categoryNotifications">Notifications</string>
+    <string name="categoryPictures">Pictures</string>
+
+    <string-array name="memory_size_titles">
+        <item>50 (Default)</item>
+        <item>100 (Preferable)</item>
+        <item>200</item>
+    </string-array>
+
+    <string-array name="memorySizeValues">
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+    </string-array>
+
+    <string name="notificationSummary">Can app notify you if news posted</string>
+    <string name="notificationTitle">Show notifications</string>
+    <string name="memoryTitle">Size of pictures cache</string>
+    <string name="defaultMemorySize" translatable="false">50</string>
+    <string name="savePreferencesTitle">Save</string>
+    <string name="pullText">Pull to refresh</string>
+    <string name="companyInfo">+380986782625 (Dmitry - Director) \n +380638105425 (Anastasia - Manager) \n\n You can contact us all the convenient communication methods using mobile apps: WhatsApp, Viber, iMessage \n\n info@yolo.kiev.ua \n promotion@yolo.kiev.ua - cooperation </string>
+    <string name="cooperationText">YOLO company provides management and advertising for photographers. We know how and want to spend the best advertising campaign for you, take care of the customer, will bring together new in the art of photography. Our responsibility is to: \n - work with the client; \n - an advertising campaign; \n - the organization of photo projects; \n - find all kinds of ways to promote your services; \n - an individual approach to the development of the photographer \n approach the job seriously. , responsible and optimistic. To clarify the details of cooperation promotion@yolo.kiev.ua write or call 380 986 782 625 number. Sincerely, Company YOLO.</string>
 </resources>

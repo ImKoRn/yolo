@@ -14,7 +14,7 @@ import com.korn.im.yolo.objects.News;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
- * Created by korn on 04.06.16.
+ * News showing
  */
 public class NewsActivity extends AppCompatActivity {
     public static final String NEWS_EXTRA = "news";

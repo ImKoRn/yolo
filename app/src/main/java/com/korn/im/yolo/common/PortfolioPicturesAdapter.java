@@ -8,19 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.korn.im.yolo.R;
-import com.korn.im.yolo.objects.Portfolio;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by korn on 04.06.16.
+ * Shows pictures
  */
 public class PortfolioPicturesAdapter extends RecyclerView.Adapter<PortfolioPicturesAdapter.PictureHolder> {
     public List<String> imageUrlList = new ArrayList<>();
 
-    private Context context;
+    private final Context context;
 
     public PortfolioPicturesAdapter(Context context) {
         this.context = context;
@@ -44,7 +43,7 @@ public class PortfolioPicturesAdapter extends RecyclerView.Adapter<PortfolioPict
     }
 
     public class PictureHolder extends RecyclerView.ViewHolder {
-        private ImageView image;
+        private final ImageView image;
         public String url;
 
         public PictureHolder(View itemView) {
@@ -53,7 +52,7 @@ public class PortfolioPicturesAdapter extends RecyclerView.Adapter<PortfolioPict
         }
 
         public void clear() {
-            image.setImageBitmap(null);
+            image.setImageResource(R.drawable.image_filter_hdr);
         }
 
         public void bind() {

@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.korn.im.yolo.R;
@@ -22,14 +21,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Adapter for photographer imageUrlList has two views LANDSCAPE and PORTRAIT.
  */
-public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.PhotographHolder> {
+public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Holder> {
+    private static final int LOADER_TYPE = -1;
     private final LinearLayoutManager linearLayoutManager;
-    private List<Portfolio> list = new ArrayList<>();
+    private final List<Portfolio> list = new ArrayList<>();
 
     private final Context context;
 
     private OnListItemClicked onListItemClickedListener;
     private int lastCheckedView = -1;
+    private boolean isLoading = false;
 
     /**
      * @param context - context in which adapter uses
@@ -40,38 +41,49 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
         this.linearLayoutManager = linearLayoutManager;
     }
 
-    public void addPortfolio(Portfolio portfolio) {
-        list.add(portfolio);
-    }
-
     public void addNewPortfolios(List<Portfolio> portfolios) {
         list.clear();
         list.addAll(portfolios);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, list.size());
     }
 
-    public void addAllPortfolios(List<Portfolio> portfolios) {
-        list.addAll(portfolios);
+    public void addData(List<Portfolio> list) {
+        this.list.addAll(list);
+        notifyItemRangeInserted(this.list.size() - list.size(), list.size());
+    }
+
+    public void loading(boolean loading) {
+        if(isLoading == loading) return;
+
+        isLoading = loading;
+        if(isLoading) notifyItemInserted(getItemCount());
+        else notifyItemRemoved(getItemCount() + 1);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(position == list.size()) return LOADER_TYPE;
+
         return context.getResources().getConfiguration().orientation;
     }
 
     @Override
-    public PhotographHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        PhotographHolder holder = null;
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Holder holder = null;
 
         switch (viewType) {
             case Configuration.ORIENTATION_LANDSCAPE: {
-                holder = new ShortPhotographHolder(LayoutInflater.from(context)
-                        .inflate(R.layout.short_photograph_item, parent, false));
+                holder = new ShortPortfolioHolder(LayoutInflater.from(context)
+                        .inflate(R.layout.short_portfolio_item, parent, false));
                 break;
             }
             case Configuration.ORIENTATION_PORTRAIT: {
-                holder = new DetailPhotographHolder(LayoutInflater.from(context)
-                        .inflate(R.layout.detail_photograph_item, parent, false));
+                holder = new DetailPortfolioHolder(LayoutInflater.from(context)
+                        .inflate(R.layout.detail_portfolio_item, parent, false));
+                break;
+            }
+            case LOADER_TYPE : {
+                holder = new LoaderHolder(LayoutInflater.from(context).inflate(R.layout.loader_item, parent, false));
                 break;
             }
         }
@@ -81,14 +93,17 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list.size() + (isLoading? 1 : 0);
     }
 
     @Override
-    public void onBindViewHolder(PhotographHolder holder, int position) {
-        holder.clear();
-        holder.setOnClickListener(onListItemClickedListener);
-        holder.bind(list.get(position));
+    public void onBindViewHolder(Holder holder, int position) {
+        if(position != list.size()) {
+            PortfolioHolder portfolioHolder = (PortfolioHolder) holder;
+            portfolioHolder.clear();
+            portfolioHolder.setOnClickListener(onListItemClickedListener);
+            portfolioHolder.bind(list.get(position));
+        }
     }
 
     public void setOnListItemClicked(OnListItemClicked listener) {
@@ -99,40 +114,36 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
         return list.get(position);
     }
 
-    public boolean isEmpty() {
-        return list.isEmpty();
-    }
-
-    public void setData(List<Portfolio> data) {
-        this.list = data;
-    }
-
     @Override
-    public void onViewRecycled(PhotographHolder holder) {
+    public void onViewRecycled(Holder holder) {
         super.onViewRecycled(holder);
         holder.unbind();
-    }
-
-    public ArrayList<Portfolio> getData() {
-        return (ArrayList<Portfolio>) list;
-    }
-
-    public int size() {
-        return list.size();
-    }
-
-    public void setClickedItem(int clickedItem) {
-        this.lastCheckedView = clickedItem;
     }
 
     public interface OnListItemClicked {
         void onClick(int position);
     }
 
-    public abstract class PhotographHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public abstract class Holder extends RecyclerView.ViewHolder {
+        public Holder(View itemView) {
+            super(itemView);
+        }
+
+        public abstract void unbind();
+    }
+
+    public class LoaderHolder extends Holder {
+        public LoaderHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void unbind() {}
+    }
+
+    public abstract class PortfolioHolder extends Holder implements View.OnClickListener {
         private OnListItemClicked onListItemClickedListener;
 
-        public PhotographHolder(View itemView) {
+        public PortfolioHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
         }
@@ -154,13 +165,11 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
         }
     }
 
-    public class ShortPhotographHolder extends PhotographHolder {
+    public class ShortPortfolioHolder extends PortfolioHolder {
         private final TextView nameSurnameView;
         private final TextView descriptionView;
 
-        private Portfolio portfolio;
-
-        public ShortPhotographHolder(View itemView) {
+        public ShortPortfolioHolder(View itemView) {
             super(itemView);
             nameSurnameView = (TextView) itemView.findViewById(R.id.nameSurnameView);
             descriptionView = (TextView) itemView.findViewById(R.id.descriptionView);
@@ -168,7 +177,6 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
 
         @Override
         public void bind(Portfolio portfolio) {
-            this.portfolio = portfolio;
             if(lastCheckedView == getAdapterPosition())
                 descriptionView.setVisibility(View.VISIBLE);
             nameSurnameView.setText(portfolio.getTitle());
@@ -200,14 +208,12 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
         }
     }
 
-    public class DetailPhotographHolder extends PhotographHolder {
+    public class DetailPortfolioHolder extends PortfolioHolder {
         private final TextView nameSurnameView;
         private final TextView descriptionView;
         private final CircleImageView photographerPhotoView;
 
-        private Portfolio portfolio;
-
-        public DetailPhotographHolder(View itemView) {
+        public DetailPortfolioHolder(View itemView) {
             super(itemView);
             nameSurnameView = (TextView) itemView.findViewById(R.id.nameSurnameView);
             descriptionView = (TextView) itemView.findViewById(R.id.descriptionView);
@@ -216,7 +222,6 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
 
         @Override
         public void bind(Portfolio portfolio) {
-            this.portfolio = portfolio;
             nameSurnameView.setText(portfolio.getTitle());
             descriptionView.setText(portfolio.getContent());
             if(portfolio.getIconReference() != null)
@@ -227,7 +232,7 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ph
         public void clear() {
             nameSurnameView.setText(null);
             descriptionView.setText(null);
-            photographerPhotoView.setImageBitmap(null);
+            photographerPhotoView.setImageResource(R.drawable.account_circle);
         }
 
         @Override

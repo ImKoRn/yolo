@@ -10,10 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.korn.im.yolo.R;
 import com.korn.im.yolo.activity.NewsActivity;
-import com.korn.im.yolo.common.ItemDecorator;
+import com.korn.im.yolo.common.AutoUpdateOnScrollListener;
 import com.korn.im.yolo.common.NewsAdapter;
 import com.korn.im.yolo.loaders.DataLoader;
 import com.korn.im.yolo.objects.News;
@@ -21,12 +22,13 @@ import com.korn.im.yolo.objects.News;
 import java.util.List;
 
 /**
- * Created by korn on 04.06.16.
+ * News fragment
  */
 public class NewsFragment extends Fragment {
-    private RecyclerView newsList;
     private NewsAdapter newsAdapter;
     private SwipeRefreshLayout swipeRefreshView;
+    private TextView emptyNewsListTextView;
+    private AutoUpdateOnScrollListener scrollListener;
 
     @Nullable
     @Override
@@ -41,32 +43,57 @@ public class NewsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        DataLoader.getInstance().sendRequest(DataLoader.REQUEST_RESTORE_DATA, News.CATEGORY_ID,
-                new DataLoader.ResultListener<News>() {
-                    @Override
-                    public void onResult(List<News> list) {
-                        newsAdapter.addNewData(list);
-                    }
-                });
+        swipeRefreshView.setRefreshing(true);
+        refresh(DataLoader.REQUEST_RESTORE_DATA);
     }
 
-    private void refresh() {
-        DataLoader.getInstance().sendRequest(DataLoader.REQUEST_LOAD_NEW_DATA, News.CATEGORY_ID,
+    private void refresh(int request) {
+        DataLoader.getInstance().sendRequest(request, News.CATEGORY_ID,
                 new DataLoader.ResultListener<News>() {
                     @Override
                     public void onResult(List<News> list) {
                         newsAdapter.addNewData(list);
+                        showEmptyListText();
+                        scrollListener.setLastItems(false);
                         if(swipeRefreshView.isRefreshing()) swipeRefreshView.setRefreshing(false);
                     }
                 });
     }
 
     private void initUi(View view) {
-        newsList = (RecyclerView) view.findViewById(R.id.newsListView);
+        emptyNewsListTextView = (TextView) view.findViewById(R.id.emptyListTextView);
+
+        RecyclerView newsList = (RecyclerView) view.findViewById(R.id.newsListView);
         if(newsList != null) {
-            newsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+            final LinearLayoutManager llm = new LinearLayoutManager(getActivity()) {
+                @Override
+                public boolean supportsPredictiveItemAnimations() {
+                    return false;
+                }
+            };
+            newsList.addOnScrollListener(scrollListener = new AutoUpdateOnScrollListener() {
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if(llm.findLastVisibleItemPosition() == newsAdapter.getItemCount() - 1 &&
+                            !isLastItems()) {
+                        DataLoader.getInstance().sendRequest(DataLoader.REQUEST_LOAD_NEW_DATA, News.CATEGORY_ID,
+                                newsAdapter.getItemCount(),
+                                new DataLoader.ResultListener<News>() {
+                                    @Override
+                                    public void onResult(List<News> list) {
+                                        if(list.size() == 0)
+                                            setLastItems(true);
+                                        showEmptyListText();
+                                        newsAdapter.loading(false);
+                                        newsAdapter.addData(list);
+                                    }
+                                });
+                        newsAdapter.loading(true);
+                    }
+                }
+            });
+            newsList.setLayoutManager(llm);
             newsList.setAdapter(newsAdapter = new NewsAdapter(getActivity()));
-            newsList.addItemDecoration(new ItemDecorator(getActivity(), 5, 5));
             newsAdapter.setOnListItemButtonClicked(new NewsAdapter.OnListItemButtonClicked() {
                 @Override
                 public void onListItemButtonClicked(int position) {
@@ -75,6 +102,7 @@ public class NewsFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
         }
 
         swipeRefreshView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshView);
@@ -82,9 +110,13 @@ public class NewsFragment extends Fragment {
         swipeRefreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                refresh(DataLoader.REQUEST_LOAD_NEW_DATA);
             }
         });
     }
 
+    private void showEmptyListText() {
+        boolean show = newsAdapter.getItemCount() == 0;
+        emptyNewsListTextView.setVisibility(show?View.VISIBLE:View.GONE);
+    }
 }

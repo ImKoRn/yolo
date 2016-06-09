@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,10 +23,22 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.korn.im.yolo.R;
 import com.korn.im.yolo.common.ApplicationHelper;
-import com.korn.im.yolo.fragments.EmailFragment;
+import com.korn.im.yolo.fragments.ContactsFragment;
+import com.korn.im.yolo.fragments.CooperationFragment;
 import com.korn.im.yolo.fragments.NewsFragment;
 import com.korn.im.yolo.fragments.PortfolioListFragment;
+import com.korn.im.yolo.fragments.PreferenceFragment;
+import com.korn.im.yolo.loaders.DataLoader;
 import com.korn.im.yolo.services.GcmRegistrationIntentService;
+import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,8 +47,14 @@ public class MainActivity extends AppCompatActivity
     private static final String LAST_MENU_CATEGORY = "lastMenuCategory";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 0;
     private static final String LAST_TITLE = "ttl";
+    private static final int DEFAULT_FRAGMENT_ID = R.id.navBlog;
+    private static final String SHOW_NOTIFICATIONS = "show_notifications";
+    private static final String CACHE_FOLDER_NAME = "images";
+    private static final int MB = 1024 * 1024;
+    private static final int MEMORY_CACHE_DEFAULT_SIZE = 20 * MB;
+    private static final String SIZE_OF_PICTURES_CACHE = "pictures_cache_size";
 
-    private int lastMenuCategory = R.id.navBlog;
+    private int lastMenuCategory = -1;
 
     private BroadcastReceiver connectivityBroadcast = null;
     private boolean isConnectivityBroadcastRegistered = false;
@@ -43,6 +62,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        initImageLoader();
+        initDataLoader();
 
         setContentView(R.layout.activity_main);
 
@@ -55,14 +79,17 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        if(savedInstanceState == null)
-            setFragment(lastMenuCategory);
+        if (savedInstanceState == null) {
+            setFragment(DEFAULT_FRAGMENT_ID);
+        }
+
+        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SHOW_NOTIFICATIONS, true))
+            registerGcm();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        registerGcm();
 
         startConnectivityBroadcast();
 
@@ -75,9 +102,50 @@ public class MainActivity extends AppCompatActivity
         stopConnectivityBroadcast();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+
+    private void initDataLoader() {
+        DataLoader.getInstance().init(this);
+    }
+
+    private void initImageLoader() {
+        LruDiskCache lruDiskCache = null;
+        boolean cacheOnDisk = false;
+
+        int diskCacheSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SIZE_OF_PICTURES_CACHE, "")) * MB;
+        try {
+            lruDiskCache = new LruDiskCache(getImagesCacheDir(), new HashCodeFileNameGenerator(),
+                    diskCacheSize);
+            Log.e(TAG, "Disk cache initialized");
+            cacheOnDisk = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Can't create disc cache");
+        }
+
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(cacheOnDisk)
+                .showImageForEmptyUri(R.drawable.broken_uri)
+                .showImageOnFail(R.drawable.broken_uri)
+                .showImageOnLoading(R.drawable.loading)
+                .build();
+
+        ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this)
+                .diskCache(lruDiskCache)
+                .defaultDisplayImageOptions(displayImageOptions)
+                .memoryCache(new LRULimitedMemoryCache(MEMORY_CACHE_DEFAULT_SIZE))
+                .threadPoolSize(Runtime.getRuntime().availableProcessors())
+                .build()
+        );
+    }
+
+    private File getImagesCacheDir() {
+        File discDir = new File(getApplicationInfo().dataDir + File.separator + CACHE_FOLDER_NAME);
+
+        if(!discDir.exists())
+            discDir.mkdirs();
+        return discDir;
     }
 
     private void startConnectivityBroadcast() {
@@ -102,7 +170,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showNoInternetConnectionMessage(boolean hasInternet) {
-        getSupportActionBar().setSubtitle(hasInternet?"": getResources().getString(R.string.noInternetConnectionMsg));
+        getSupportActionBar().setSubtitle(hasInternet?"": getResources().getString(R.string.offlineText));
     }
 
     private void registerGcm() {
@@ -124,9 +192,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.mainNavView);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(lastMenuCategory);
+
     }
 
-    public void setFragment(int itemId) {
+    private void setFragment(int itemId) {
+        if(itemId == lastMenuCategory) return;
+
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (lastMenuCategory = itemId) {
             case R.id.navBlog: {
@@ -137,7 +209,17 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.holder, new PortfolioListFragment());
                 break;
             }
-            default: {
+            case R.id.navCooperation: {
+                fragmentTransaction.replace(R.id.holder, new CooperationFragment());
+                break;
+            }
+            case R.id.navContacts: {
+                fragmentTransaction.replace(R.id.holder, new ContactsFragment());
+                break;
+            }
+            case R.id.navPreferences: {
+                fragmentTransaction.replace(R.id.holder, new PreferenceFragment());
+                break;
             }
         }
         fragmentTransaction.commit();
@@ -163,7 +245,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer != null ? drawer.isDrawerOpen(GravityCompat.START) : false) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -176,26 +258,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        //TODO implement transaction
-
-        if (item.getItemId() == lastMenuCategory) {
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        }
-
         getSupportActionBar().setTitle(item.getTitle());
-
         setFragment(item.getItemId());
 
         drawer.closeDrawer(GravityCompat.START);

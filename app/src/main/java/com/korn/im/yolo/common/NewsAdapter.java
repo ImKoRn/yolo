@@ -17,38 +17,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by korn on 04.06.16.
+ * Adapter for showing news
  */
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
-    private List<News> list = new ArrayList<>();
-    private Context context;
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.Holder> {
+    private static final int LOADER_TYPE = -1;
+    private final List<News> list = new ArrayList<>();
+    private final Context context;
     private OnListItemButtonClicked onListItemButtonClickedListener;
+    private boolean isLoading;
 
     public NewsAdapter(Context context) {
         this.context = context;
     }
 
     @Override
-    public NewsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        if(position == list.size()) return LOADER_TYPE;
+
+        return super.getItemViewType(position);
+    }
+
+    @Override
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == LOADER_TYPE)
+            return new LoaderHolder(LayoutInflater.from(context).inflate(R.layout.loader_item, parent, false));
+
         return new NewsHolder(LayoutInflater.from(context).inflate(R.layout.news_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(NewsHolder holder, int position) {
-        holder.news = list.get(position);
-        holder.clean();
-        holder.bind();
+    public void onBindViewHolder(Holder holder, int position) {
+        if(position != list.size()) {
+            NewsHolder newsHolder = (NewsHolder) holder;
+
+            newsHolder.news = list.get(position);
+            newsHolder.clean();
+            newsHolder.bind();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list.size() + (isLoading? 1 : 0);
     }
 
     public void addNewData(List<News> list) {
         this.list.clear();
         this.list.addAll(list);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, list.size());
+    }
+
+    public void addData(List<News> list) {
+        this.list.addAll(list);
+        notifyItemRangeInserted(this.list.size() - list.size(), list.size());
     }
 
     public void setOnListItemButtonClicked(OnListItemButtonClicked onListItemButtonClickedListener) {
@@ -59,29 +80,54 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         return list.get(position);
     }
 
-    public class NewsHolder extends RecyclerView.ViewHolder {
+    public void loading(boolean loading) {
+        if(isLoading == loading) return;
+
+        isLoading = loading;
+        if(isLoading) notifyItemInserted(getItemCount());
+        else notifyItemRemoved(getItemCount() + 1);
+    }
+
+
+
+    public abstract class Holder extends RecyclerView.ViewHolder {
+        public Holder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class LoaderHolder extends Holder {
+        public LoaderHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class NewsHolder extends Holder {
         private final TextView titleView;
         private final TextView contentView;
         private final ImageView imageView;
         private final Button moreBtn;
-
-        private News news;
+        public News news;
 
         public NewsHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            titleView = (TextView) itemView.findViewById(R.id.titleView);
-            contentView = (TextView) itemView.findViewById(R.id.contentView);
-            moreBtn = (Button) itemView.findViewById(R.id.moreBtn);
-            moreBtn.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onListItemButtonClickedListener.onListItemButtonClicked(getAdapterPosition());
                 }
-            });
+            };
+
+            imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            itemView.setOnClickListener(listener);
+            titleView = (TextView) itemView.findViewById(R.id.titleView);
+            contentView = (TextView) itemView.findViewById(R.id.contentView);
+            moreBtn = (Button) itemView.findViewById(R.id.moreBtn);
+            moreBtn.setOnClickListener(listener);
         }
 
         public void clean() {
+            imageView.setImageResource(R.drawable.image_filter_hdr);
         }
 
         public void bind() {
@@ -95,4 +141,5 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     public interface OnListItemButtonClicked {
         void onListItemButtonClicked(int position);
     }
+
 }

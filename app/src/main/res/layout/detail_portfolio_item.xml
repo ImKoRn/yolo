@@ -4,7 +4,11 @@
     android:layout_width="match_parent"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2.5dp"
+    android:layout_marginBottom="2.5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -16,7 +20,8 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:id="@+id/photographPhoto"
-            app:civ_border_width="2dp"
+            android:src="@drawable/account_circle"
+            app:civ_border_width="1dp"
             app:civ_border_color="@color/colorPrimaryDark"/>
 
         <LinearLayout
@@ -29,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Name Surname" android:ellipsize="end"
+                android:ellipsize="end"
                 android:textColor="@color/colorPrimary"
                 android:id="@+id/nameSurnameView"
                 android:textStyle="bold" />
@@ -38,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Text" android:maxLines="3" android:ellipsize="end"
+                android:maxLines="3" android:ellipsize="end"
                 android:id="@+id/descriptionView" />
         </LinearLayout>
     </LinearLayout>

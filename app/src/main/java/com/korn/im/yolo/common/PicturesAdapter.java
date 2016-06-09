@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PicturesAdapter extends PagerAdapter {
     public List<String> imageUrlList = new ArrayList<>();
-    private Context context;
+    private final Context context;
 
     public PicturesAdapter(Context context)
     {
@@ -25,11 +25,6 @@ public class PicturesAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         return imageUrlList.size();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return super.getPageTitle(position);
     }
 
     @Override

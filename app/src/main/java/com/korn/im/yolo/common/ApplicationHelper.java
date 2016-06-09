@@ -8,14 +8,9 @@ import android.net.ConnectivityManager;
 
 public final class ApplicationHelper
 {
-    public static final String APP_VERSION_PREFS = "application_version";
+    private static final String APP_VERSION_PREFS = "application_version";
 
-    public static boolean isApplicationVersionCodeEqualsSavedApplicationVersionCode(Context context)
-    {
-        return getApplicationVersionCode(context) == getApplicationVersionCodeFromPreferences(context);
-    }
-
-    public static int getApplicationVersionCode(Context context)
+    private static int getApplicationVersionCode(Context context)
     {
         PackageManager pm = context.getPackageManager();
         PackageInfo packageInfo;
@@ -31,14 +26,9 @@ public final class ApplicationHelper
         return applicationVersion;
     }
 
-    public static int getApplicationVersionCodeFromPreferences(Context context)
+    private static int getApplicationVersionCodeFromPreferences(Context context)
     {
         return context.getSharedPreferences(APP_VERSION_PREFS, Context.MODE_PRIVATE).getInt("application_version_code", 0);
-    }
-
-    public static void putCurrentPackageVersionInPreferences(Context context)
-    {
-        context.getSharedPreferences(APP_VERSION_PREFS, Context.MODE_PRIVATE).edit().putInt("application_version_code", getApplicationVersionCode(context)).commit();
     }
 
     public static boolean hasEthernetConnection(Context context) {

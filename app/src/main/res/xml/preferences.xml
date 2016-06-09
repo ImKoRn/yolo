@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <PreferenceCategory android:title="@string/categoryNotifications">
+        <CheckBoxPreference
+            android:key="show_notifications"
+            android:title="@string/notificationTitle"
+            android:summary="@string/notificationSummary"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/categoryPictures">
+        <ListPreference
+            android:key="pictures_cache_size"
+            android:title="@string/memoryTitle"
+            android:summary="@string/memorySizeSummary"
+            android:defaultValue="@string/defaultMemorySize"
+            android:entryValues="@array/memorySizeValues"
+            android:entries="@array/memory_size_titles"/>
+    </PreferenceCategory>
+</PreferenceScreen>

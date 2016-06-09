@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/mainItems" android:checkableBehavior="single">
         <item
@@ -12,26 +11,21 @@
             android:id="@+id/navPortfolio"
             android:title="@string/portfolioMenuTitle"
             android:icon="@drawable/portfolio"/>
+        <item
+            android:id="@+id/navCooperation"
+            android:title="@string/cooperationMenuTitle"
+            android:icon="@drawable/cooperation"/>
+        <item
+            android:id="@+id/navContacts"
+            android:title="@string/contactsMenuTitle"
+            android:icon="@drawable/contacts"/>
     </group>
 
-    <item android:title="@string/aboutMenuGroupTitle"
-        app:showAsAction="ifRoom|withText">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/navAboutCompany"
-                    android:icon="@drawable/domain"
-                    android:title="@string/aboutCompanyMenuTitle" />
-                <item
-                    android:id="@+id/navAboutDeveloper"
-                    android:icon="@drawable/developer"
-                    android:title="@string/aboutDeveloperMenuTitle" />
-            </group>
-        </menu>
-    </item>
-
-    <item
-        android:id="@+id/navPreferences"
-        android:icon="@drawable/settings"
-        android:title="@string/preferencesMenuTitle" />
+    <group>
+        <item
+            android:checkable="true"
+            android:id="@+id/navPreferences"
+            android:icon="@drawable/settings"
+            android:title="@string/preferencesMenuTitle" />
+    </group>
 </menu>

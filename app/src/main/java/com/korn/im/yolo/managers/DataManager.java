@@ -1,6 +1,7 @@
 package com.korn.im.yolo.managers;
 
 import android.content.Context;
+import android.text.Html;
 
 import com.korn.im.yolo.objects.News;
 import com.korn.im.yolo.objects.Portfolio;
@@ -29,16 +30,14 @@ public class DataManager
 
     private Map<Integer, List<Post>> dataMap;
 
-    private static DataManager instance;
-
     public DataManager() {
         dataMap = Collections.synchronizedMap(new HashMap<Integer, List<Post>>());
     }
 
-    public boolean parseStringToObjects(int type, String data, boolean append) {
+    public boolean parseStringToObjects(int type, String data, int offset) {
         try {
             JSONObject object;
-            JSONArray dataArray = new JSONArray(data);
+            JSONArray dataArray = new JSONArray(Html.fromHtml(data).toString().replace("\n\n", "\n"));
 
             if (dataMap == null) dataMap = new HashMap<>();
             List<Post> posts;
@@ -47,14 +46,11 @@ public class DataManager
                 dataMap.put(type, posts);
             }
 
-            if(!append) {
-                posts.clear();
-            }
+            if(offset == 0) posts.clear();
 
             for (int i = 0; i < dataArray.length(); i++) {
                 object = dataArray.optJSONObject(i);
                 if(object != null) {
-
                     switch (type) {
                         case News.CATEGORY_ID : {
                             try {
@@ -70,7 +66,6 @@ public class DataManager
                         }
                     }
                 }
-
             }
             return true;
         } catch (JSONException e) {
@@ -103,8 +98,7 @@ public class DataManager
                 bufferedWriter.close();
             } else return false;
         } catch (IOException e) {
-            if (file != null)
-                file.delete();
+            file.delete();
             return false;
         }
         return true;
@@ -118,17 +112,16 @@ public class DataManager
 
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 StringBuilder stringBuilder = new StringBuilder();
-                String string;
-
-                while ((string = bufferedReader.readLine()) != null)
-                    stringBuilder.append(string);
+                String str;
+                while ((str = bufferedReader.readLine()) != null)
+                    stringBuilder.append(str);
 
                 bufferedReader.close();
 
-                return parseStringToObjects(type, stringBuilder.toString(), false);
+                return parseStringToObjects(type, stringBuilder.toString(), 0);
             } else return false;
         } catch (IOException e) {
-            if(file != null && file.exists())
+            if(file.exists())
                 file.delete();
             return false;
         }

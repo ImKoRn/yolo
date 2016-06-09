@@ -8,15 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v7.preference.PreferenceManager;
 
 import com.korn.im.yolo.R;
 import com.korn.im.yolo.activity.MainActivity;
 
 /**
- * Created by korn on 26.05.16.
+ * Listen for push messages and show it
  */
 public class GcmMessagesListenerService extends com.google.android.gms.gcm.GcmListenerService {
-    private static final String TAG = "GcmMessagesListenerService";
+    private static final String SHOW_NOTIFICATIONS = "show_notifications";
     private static final int NOTIFICATION = 0;
     private static final String EXTRA_MESSAGE = "message";
     private static final String EXTRA_TITLE = "title";
@@ -25,9 +26,11 @@ public class GcmMessagesListenerService extends com.google.android.gms.gcm.GcmLi
     @Override
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
-        String title = data.getString(EXTRA_TITLE);
-        String message = data.getString(EXTRA_MESSAGE);
-        showNotification(this, title, message);
+        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SHOW_NOTIFICATIONS, true)) {
+            String title = data.getString(EXTRA_TITLE);
+            String message = data.getString(EXTRA_MESSAGE);
+            showNotification(this, title, message);
+        }
     }
 
     private void showNotification(Context context, String title, String message) {

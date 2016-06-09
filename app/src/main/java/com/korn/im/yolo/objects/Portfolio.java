@@ -2,16 +2,13 @@ package com.korn.im.yolo.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,10 +23,7 @@ public class Portfolio extends Post {
     private int price;
 
     private String iconReference = null;
-    private List<String> listOfPhotoReferences = new ArrayList<>();
-
-    public Portfolio() {
-    }
+    private final List<String> listOfPhotoReferences = new ArrayList<>();
 
     public Portfolio(JSONObject object) throws JSONException, ParseException {
         parseFromJsonObject(object);
@@ -41,29 +35,13 @@ public class Portfolio extends Post {
         parcel.readStringList(listOfPhotoReferences);
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
 
     public String getIconReference() {
         return iconReference;
     }
 
-    public void setIconReference(String iconReference) {
-        this.iconReference = iconReference;
-    }
-
     public List<String> getListOfPhotoReferences() {
         return listOfPhotoReferences;
-    }
-
-    public void setListOfPhotoReferences(List<String> listOfPhotoReferences) {
-        this.listOfPhotoReferences = listOfPhotoReferences;
     }
 
     @Override
@@ -85,7 +63,7 @@ public class Portfolio extends Post {
 
         JSONArray content = jsonObject.optJSONArray(PORTFOLIO_CONTENT_FIELD);
         if(content != null) {
-            setContent(Html.fromHtml(content.optString(0, "")).toString());
+            setContent(content.optString(0, ""));
         }
     }
 

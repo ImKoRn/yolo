@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Pair;
 
 import com.korn.im.yolo.managers.DataManager;
 import com.korn.im.yolo.objects.Post;
@@ -27,19 +26,19 @@ public class DataLoader extends HandlerThread {
     public static final int REQUEST_RESTORE_DATA = 2;
 
 
-    public static final int RESPONSE_NEW_DATA_LOADED = -1;
-    public static final int RESPONSE_RESTORE_DATA = -2;
-    public static final int RESPONSE_CLIENT_ERROR = -3;
-    public static final int RESPONSE_SERVER_ERROR = -4;
-    public static final int RESPONSE_UNKNOWN_REQUEST = -5;
+    private static final int RESPONSE_NEW_DATA_LOADED = -1;
+    private static final int RESPONSE_RESTORE_DATA = -2;
+    private static final int RESPONSE_CLIENT_ERROR = -3;
+    private static final int RESPONSE_SERVER_ERROR = -4;
+    private static final int RESPONSE_UNKNOWN_REQUEST = -5;
 
     private static final String SITE_URL = "http://yolo.kiev.ua/wp-json/wp/v2/posts";
 
     private static Handler loadingHandler;
     private static Handler dataHandler;
 
-    private Map<Integer, ResultListener> requestsMap;
-    private DataManager dataManager;
+    private final Map<Integer, ResultListener> requestsMap;
+    private final DataManager dataManager;
     private Context context;
     private boolean isInitialized = false;
 
@@ -75,14 +74,17 @@ public class DataLoader extends HandlerThread {
     }
 
     public void sendRequest(int request, int categoryId, ResultListener<? extends Post> resultListener) {
+        sendRequest(request, categoryId, 0, resultListener);
+    }
+
+    public void sendRequest(int request, int categoryId, int offset, ResultListener<? extends Post> resultListener) {
         if (!isInitialized) throw new IllegalStateException("DataLoader not initialized, call init()");
 
         if (loadingHandler != null) {
             requestsMap.put(categoryId, resultListener);
 
-            loadingHandler.removeMessages(request, context);
-            Message message = loadingHandler.obtainMessage(request, categoryId, 0);
-            message.sendToTarget();
+            loadingHandler.removeMessages(request, null);
+            loadingHandler.obtainMessage(request, categoryId, offset).sendToTarget();
         }
     }
 
@@ -96,24 +98,52 @@ public class DataLoader extends HandlerThread {
             switch (msg.what) {
                 case DataLoader.RESPONSE_NEW_DATA_LOADED: {
                     ResultListener resultListener;
-                    if((resultListener = requestsMap.get(msg.arg1)) != null)
-                        resultListener.onResult(dataManager.getDataByCategory(msg.arg1));
+                    if((resultListener = requestsMap.get(msg.arg1)) != null) {
+                        List<Post> list = dataManager.getDataByCategory(msg.arg1);
+                        if(msg.arg2 != 0) list = list.subList(msg.arg2, list.size());
 
+                        if(list != null) resultListener.onResult(list);
+                        else resultListener.onResult(Collections.emptyList());
+                    }
                     requestsMap.remove(msg.arg1);
                     break;
                 }
                 case DataLoader.RESPONSE_RESTORE_DATA: {
                     ResultListener resultListener;
-                    if((resultListener = requestsMap.get(msg.arg1)) != null)
-                        resultListener.onResult(dataManager.getDataByCategory(msg.arg1));
+                    if((resultListener = requestsMap.get(msg.arg1)) != null) {
+                        List<Post> list = dataManager.getDataByCategory(msg.arg1);
+                        if(msg.arg2 != 0) list = list.subList(msg.arg2, list.size());
+
+                        if(list != null) resultListener.onResult(list);
+                        else resultListener.onResult(Collections.emptyList());
+                    }
 
                     requestsMap.remove(msg.arg1);
                     break;
                 }
                 case DataLoader.RESPONSE_SERVER_ERROR: {
+                    ResultListener resultListener;
+                    if((resultListener = requestsMap.get(msg.arg1)) != null) {
+                        List<Post> list = dataManager.getDataByCategory(msg.arg1);
+                        if(msg.arg2 != 0) list = list.subList(msg.arg2, list.size());
+
+                        if(list != null) resultListener.onResult(list);
+                        else resultListener.onResult(Collections.emptyList());
+                    }
+
+                    requestsMap.remove(msg.arg1);
                     break;
                 }
                 case DataLoader.RESPONSE_CLIENT_ERROR: {
+                    ResultListener resultListener;
+                    if((resultListener = requestsMap.get(msg.arg1)) != null) {
+                        List<Post> list = dataManager.getDataByCategory(msg.arg1);
+                        if(msg.arg2 != 0) list = list.subList(msg.arg2, list.size());
+
+                        if(list != null) resultListener.onResult(list);
+                        else resultListener.onResult(Collections.emptyList());
+                    }
+                    requestsMap.remove(msg.arg1);
                     break;
                 }
                 case DataLoader.RESPONSE_UNKNOWN_REQUEST: {
@@ -185,7 +215,7 @@ public class DataLoader extends HandlerThread {
         private void parseResult(Message msg, String string) {
             switch (msg.what) {
                 case REQUEST_LOAD_NEW_DATA: {
-                    dataManager.parseStringToObjects(msg.arg1, string, false);
+                    dataManager.parseStringToObjects(msg.arg1, string, msg.arg2);
                     dataManager.save(msg.arg1, context);
                     break;
                 }
@@ -195,7 +225,7 @@ public class DataLoader extends HandlerThread {
         private String resolveRequest(Message msg) {
             switch (msg.what) {
                 case REQUEST_LOAD_NEW_DATA: {
-                    return SITE_URL + "?categories=" + msg.arg1;
+                    return SITE_URL + "?categories=" + msg.arg1 + "&offset=" + msg.arg2;
                 }
             }
             return null;

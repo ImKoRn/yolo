@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 
 /**
- * Created by korn on 24.05.16.
+ * News object
  */
 public class News extends Post {
     public static final int CATEGORY_ID = 22;
@@ -22,17 +22,13 @@ public class News extends Post {
         parseFromJsonObject(object);
     }
 
-    public News(Parcel parcel) {
+    private News(Parcel parcel) {
         super(parcel);
         iconReference = parcel.readString();
     }
 
     public String getIconReference() {
         return iconReference;
-    }
-
-    public void setIconReference(String iconReference) {
-        this.iconReference = iconReference;
     }
 
     @Override

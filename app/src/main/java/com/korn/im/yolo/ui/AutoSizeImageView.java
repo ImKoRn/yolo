@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.korn.im.yolo.R;
 
 /**
- * Created by korn on 04.06.16.
+ * Image view that auto corrects self size by height or width
  */
 public class AutoSizeImageView extends ImageView {
     private static final int WRAP_BY_HEIGHT = 0;
@@ -48,7 +48,9 @@ public class AutoSizeImageView extends ImageView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Bitmap bitmap = ((BitmapDrawable) getDrawable()).getBitmap();
+        Bitmap bitmap = null;
+        if(getDrawable() instanceof  BitmapDrawable)
+            bitmap = ((BitmapDrawable) getDrawable()).getBitmap();
 
         if(bitmap != null) {
             float scale = (float) bitmap.getWidth() / (float) bitmap.getHeight();

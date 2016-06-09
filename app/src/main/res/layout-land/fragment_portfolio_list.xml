@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:orientation="horizontal">
 
     <FrameLayout
@@ -14,22 +16,18 @@
             android:id="@+id/swipeRefreshView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:layout_height="match_parent"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:id="@+id/photographersList"
-                tools:listitem="@layout/short_photograph_item" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_height="match_parent">
+                <android.support.v7.widget.RecyclerView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:id="@+id/photographersList"
+                    tools:listitem="@layout/short_portfolio_item" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/noPhotographersYetText"
-            android:textColor="@android:color/darker_gray"
-            android:layout_gravity="center"
-            android:id="@+id/photographersEmptyView"
-            android:visibility="gone"/>
+                <include layout="@layout/empty_list_text_view"/>
+            </FrameLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>
 
     <View
@@ -42,7 +40,7 @@
         android:layout_weight="1"
         android:visibility="visible">
 
-        <FrameLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/photographerContainer"
@@ -55,18 +53,27 @@
                 android:scrollbars="horizontal"
                 tools:listitem="@layout/rv_image_item"
                 android:scrollbarAlwaysDrawHorizontalTrack="true" />
-        </FrameLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sendBtn"
+                android:src="@drawable/email"
+                android:layout_margin="16dp"
+                app:layout_anchor="@id/picturesViewList"
+                app:layout_anchorGravity="bottom|right|end"/>
+        </android.support.design.widget.CoordinatorLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/colorAccent"
             android:text="@string/noPhotographerSelectedText"
             android:id="@+id/photographerEmptyView"
             android:layout_gravity="center"
             android:visibility="visible" />
-
     </FrameLayout>
 
 

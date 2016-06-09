@@ -4,17 +4,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:clickable="true"
-    android:elevation="1dp"
+    android:background="@android:color/white"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp"
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:background="@android:color/white"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Name Surname"
         android:textColor="@color/colorPrimaryDark"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/nameSurnameView"
         android:textStyle="bold"
         android:layout_gravity="left|center_vertical" />
@@ -23,9 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:background="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Name Surname"
         android:textColor="@color/colorPrimary"
         android:id="@+id/descriptionView"
         android:textStyle="bold"

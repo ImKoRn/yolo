@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -19,9 +18,7 @@ import java.net.URL;
 import java.util.Random;
 
 public class GcmRegistrationIntentService extends IntentService {
-    public static final String TAG = "GcmRegistrationIntentService";
-
-    public static final String REGISTRATION_SUCCESS = "reg_success";
+    private static final String TAG = "GcmRegistrationIntentService";
 
     private static final int MAX_ATTEMPT = 3;
     private static final String REGISTRATION_SITE_URL = "http://yolo.kiev.ua/?regId=";
@@ -37,8 +34,6 @@ public class GcmRegistrationIntentService extends IntentService {
     @SuppressLint("LongLogTag")
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-
         InstanceID instanceID = InstanceID.getInstance(this);
 
         String token;
@@ -62,7 +57,6 @@ public class GcmRegistrationIntentService extends IntentService {
                 HttpURLConnection connection = ((HttpURLConnection) new URL(REGISTRATION_SITE_URL + token).openConnection());
                 Log.i(TAG, "Server response " + connection.getResponseMessage());
                 connection.disconnect();
-                Toast.makeText(this, "request sended", Toast.LENGTH_SHORT).show();
 
                 break;
             } catch (MalformedURLException e){
