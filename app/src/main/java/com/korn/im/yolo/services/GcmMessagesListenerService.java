@@ -25,7 +25,6 @@ public class GcmMessagesListenerService extends com.google.android.gms.gcm.GcmLi
     @SuppressLint("LongLogTag")
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        super.onMessageReceived(from, data);
         if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SHOW_NOTIFICATIONS, true)) {
             String title = data.getString(EXTRA_TITLE);
             String message = data.getString(EXTRA_MESSAGE);

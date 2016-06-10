@@ -16,6 +16,10 @@
             android:title="@string/cooperationMenuTitle"
             android:icon="@drawable/cooperation"/>
         <item
+            android:id="@+id/navSertificate"
+            android:title="@string/sertificateMenuTitle"
+            android:icon="@drawable/sertificate"/>
+        <item
             android:id="@+id/navContacts"
             android:title="@string/contactsMenuTitle"
             android:icon="@drawable/contacts"/>

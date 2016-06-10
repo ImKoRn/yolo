@@ -1,6 +1,7 @@
 package com.korn.im.yolo.common;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,6 +112,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.Holder> {
 
         public NewsHolder(View itemView) {
             super(itemView);
+
+            ((CardView) itemView).setPreventCornerOverlap(false);
+
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

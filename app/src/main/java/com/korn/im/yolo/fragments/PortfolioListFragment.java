@@ -38,11 +38,12 @@ import java.util.List;
  * Fragment of photographers imageUrlList
  */
 public class PortfolioListFragment extends Fragment implements PortfoliosAdapter.OnListItemClicked {
-
-
-    private static final String ORDER_SUBJECT = "Test";
+    private static final String ORDER_SUBJECT = "Order";
     private static final String CONTACTS_FIELD = "Contacts:\n";
+    private static final String PHOTOGRAPHER_FIELD = "Photographer:\n";
+
     private static final Uri TARGET_URI = Uri.parse("mailto:kor.wolf13@gmail.com");
+
     private static final String LAST_SHOWED_ITEM_ID = "lastShowedItemId";
 
     public static final String SELECTED_PORTFOLIO = "photographItem";
@@ -208,10 +209,12 @@ public class PortfolioListFragment extends Fragment implements PortfoliosAdapter
 
     private String createText(boolean appendPhoneAndEmail) {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(PHOTOGRAPHER_FIELD)
+                .append(portfoliosAdapter.getItem(lastShowedPhotographerId).getTitle()).append('\n');
 
         stringBuilder.append(CONTACTS_FIELD)
                 .append("Email: ").append(getEmail().get(0)).append('\n');
-        if (appendPhoneAndEmail) stringBuilder.append("Phone: ").append(getPhoneNumber());
+        if (appendPhoneAndEmail) stringBuilder.append("Phone: ").append(getPhoneNumber()).append('\n');
 
         return stringBuilder.toString();
     }

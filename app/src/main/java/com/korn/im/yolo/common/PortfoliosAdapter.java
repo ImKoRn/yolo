@@ -2,11 +2,13 @@ package com.korn.im.yolo.common;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.korn.im.yolo.R;
@@ -15,8 +17,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Adapter for photographer imageUrlList has two views LANDSCAPE and PORTRAIT.
@@ -211,13 +211,15 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ho
     public class DetailPortfolioHolder extends PortfolioHolder {
         private final TextView nameSurnameView;
         private final TextView descriptionView;
-        private final CircleImageView photographerPhotoView;
+        private final ImageView photographerPhotoView;
 
         public DetailPortfolioHolder(View itemView) {
             super(itemView);
+            ((CardView) itemView).setPreventCornerOverlap(false);
+
             nameSurnameView = (TextView) itemView.findViewById(R.id.nameSurnameView);
             descriptionView = (TextView) itemView.findViewById(R.id.descriptionView);
-            photographerPhotoView = (CircleImageView) itemView.findViewById(R.id.photographPhoto);
+            photographerPhotoView = (ImageView) itemView.findViewById(R.id.photographPhoto);
         }
 
         @Override
@@ -232,7 +234,7 @@ public class PortfoliosAdapter extends RecyclerView.Adapter<PortfoliosAdapter.Ho
         public void clear() {
             nameSurnameView.setText(null);
             descriptionView.setText(null);
-            photographerPhotoView.setImageResource(R.drawable.account_circle);
+            photographerPhotoView.setImageResource(R.drawable.image_filter_hdr);
         }
 
         @Override

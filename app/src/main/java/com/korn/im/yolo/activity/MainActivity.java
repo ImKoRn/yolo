@@ -28,6 +28,7 @@ import com.korn.im.yolo.fragments.CooperationFragment;
 import com.korn.im.yolo.fragments.NewsFragment;
 import com.korn.im.yolo.fragments.PortfolioListFragment;
 import com.korn.im.yolo.fragments.PreferenceFragment;
+import com.korn.im.yolo.fragments.SertificateFragment;
 import com.korn.im.yolo.loaders.DataLoader;
 import com.korn.im.yolo.services.GcmRegistrationIntentService;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
@@ -219,6 +220,10 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.navPreferences: {
                 fragmentTransaction.replace(R.id.holder, new PreferenceFragment());
+                break;
+            }
+            case R.id.navSertificate: {
+                fragmentTransaction.replace(R.id.holder, new SertificateFragment());
                 break;
             }
         }

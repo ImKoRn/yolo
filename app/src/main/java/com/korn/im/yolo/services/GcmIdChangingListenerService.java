@@ -10,8 +10,8 @@ import com.google.android.gms.iid.InstanceIDListenerService;
 public class GcmIdChangingListenerService extends InstanceIDListenerService {
     @Override
     public void onTokenRefresh() {
-        super.onTokenRefresh();
         Intent intent = new Intent(this, GcmRegistrationIntentService.class);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         startService(intent);
     }
 }
